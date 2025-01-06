@@ -15,21 +15,22 @@ const Authcontext =createContext<AuthcontextType | undefined>(undefined);
 
 export const AuthProvider:React.FC<{children:ReactNode}> = ({children})=>{
      
-     const [isAuthenticate,setIsAuthenticate]=useState(true);
+     const [isAuthenticate,setIsAuthenticate]=useState(false);
      const router =useRouter();
      useEffect(()=>{
        const token =localStorage.getItem('token');
        if(token)
        {
-         fetch('/api/auth/validate',{
+         fetch('/api/auth/validatetoken',{
              method:'POST',
              headers:{
-               Authorization:`Brear ${token}`
+               Authorization:`Bearer ${token}`
              }
          }).then((res)=>{
           if(res.ok)
           {
             setIsAuthenticate(true);
+            
           }
           else{
             setIsAuthenticate(false);
@@ -43,7 +44,7 @@ export const AuthProvider:React.FC<{children:ReactNode}> = ({children})=>{
          })
        }
 
-     },[router])
+     },[router]);
 
      const login=(token:string)=>{
       localStorage.setItem('token',token);

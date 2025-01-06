@@ -14,19 +14,21 @@ const dashboard = () => {
     const[products,setProducts]=useState([]);
     const{isAuthenticate}=useAuth();
     const router =useRouter();
-    useEffect(()=>{
-      if(isAuthenticate)
-      {
-      const fetchproduct= async()=> await fetch('https://dummyjson.com/products')
+    const fetchproduct= async()=> await fetch('https://dummyjson.com/products')
       .then(res => res.json())
       .then(data=>setProducts(data.products))   
       
-      fetchproduct();
+    useEffect(()=>{
+      console.log(isAuthenticate);
+      if(isAuthenticate)
+      {
+         fetchproduct();
       }else{
+         
         router.push('/admin/login');
       }
     },[])
-    console.log(products)
+    
   return (
     <div className="px-20 text-black w-full justify-items-center py-20">
         <div>

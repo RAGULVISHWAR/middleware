@@ -1,8 +1,10 @@
 'use client'
+import { useAuth } from '@/app/context/Authcontext';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
 const login = () => {
+  const{login}=useAuth();
   const [email,setEmail]=useState("");
   const[password,setPassword]=useState("");
   const router = useRouter();
@@ -10,12 +12,24 @@ const login = () => {
     try{
        const res = await fetch('/api/auth/token',{
         method:'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
         body:JSON.stringify({email,password})
       })
-      if (res.ok) {
-        const token = await res.json();
-        console.log(token);
-       }
+      if(res.ok)
+      {
+          const {token} = await res.json();
+          if(token)
+          {
+            login(token);
+          }
+      }
+      else
+      {
+        const errorData = await res.json();
+        alert(errorData.message || 'Login failed');
+      }
      }
      catch(err)
      {
